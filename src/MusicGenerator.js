@@ -37,11 +37,10 @@ class MusicGenerator {
   }
 
   assignPitches(rhythm, clef, measureIdx = 0) {
-    // For both clefs, use chord progression
+    const chordName = this.progression[measureIdx % this.progression.length];
+    const chordNotes = this.chordMap[chordName];
+    const firstNote = chordNotes[0];
     if (clef === "treble") {
-      const chordName = this.progression[measureIdx % this.progression.length];
-      const chordNotes = this.chordMap[chordName];
-      const firstNote = chordNotes[0]; // First note of the chord
       const pitches = rhythm.map((_, index) => {
         if (index === 0 || index === rhythm.length - 1) {
           return firstNote; // First and last note must be the first note of the chord
@@ -50,8 +49,12 @@ class MusicGenerator {
       });
       return pitches;
     } else {
-      // For bass, use chord progression
-      return rhythm.map(() => this.getBassPitch(measureIdx));
+        return rhythm.map((_, index) => {
+            if (index === 0) {
+                return firstNote + ","; // First bass note is the first note of the chord
+            }
+            return this.getBassPitch(measureIdx);
+        });
     }
   }
 
@@ -106,7 +109,6 @@ class MusicGenerator {
     const chordName = this.progression[measureIdx % this.progression.length];
     const chordNotes = this.chordMap[chordName];
     const note = chordNotes[Math.floor(Math.random() * chordNotes.length)];
-    console.log(measureIdx, chordName, note);
     return note + ",";
   }
   
@@ -121,7 +123,6 @@ class MusicGenerator {
       const bassRhythm = this.generateMeasure(timeSignature, "bass").rhythm;
       const bassPitches = this.assignPitches(bassRhythm, "bass", i);
       bassMeasures.push({ rhythm: bassRhythm, pitches: bassPitches });
-      // console.log(this.chordMap);
     }
     return { treble: trebleMeasures, bass: bassMeasures };
   }

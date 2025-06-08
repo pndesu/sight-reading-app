@@ -16,9 +16,8 @@ function App() {
     const ChordProgressionRule = new ChordProgressionRule1();
     const chordProgressionGenerator = new ChordProgressionGenerator(ChordProgressionRule.getRule(), scoreKey);
     chordProgressionGenerator.buildProgression();
-    console.log(chordProgressionGenerator.progression);
     chordProgressionGenerator.buildChordMap();
-    console.log(chordProgressionGenerator.chordMap);
+    console.log(chordProgressionGenerator.progression, chordProgressionGenerator.chordMap);
     const musicGenerator = new MusicGenerator(chordProgressionGenerator.progression, chordProgressionGenerator.chordMap);
     const generatedScore = musicGenerator.generateScore(measures, timeSignature);
     setScore(generatedScore);
