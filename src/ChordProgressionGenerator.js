@@ -18,7 +18,6 @@ class ChordProgressionGenerator {
                 this.progression.push(nextChordChoices[Math.floor(Math.random() * nextChordChoices.length)]);
             }
         }
-        console.log(this.progression);
         return this.progression;
     }
     buildChordMap() {

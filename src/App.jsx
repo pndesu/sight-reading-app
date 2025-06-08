@@ -12,19 +12,18 @@ function App() {
   const [measures, setMeasures] = useState(2);
   const [scoreKey, setScoreKey] = useState('C');
 
-  const ChordProgressionRule = new ChordProgressionRule1();
-  const chordProgressionGenerator = new ChordProgressionGenerator(ChordProgressionRule.getRule(), scoreKey);
-  chordProgressionGenerator.buildProgression();
-  chordProgressionGenerator.buildChordMap();
-  const musicGenerator = new MusicGenerator(chordProgressionGenerator.progression, chordProgressionGenerator.chordMap);
   const generateScore = () => {
+    const ChordProgressionRule = new ChordProgressionRule1();
+    const chordProgressionGenerator = new ChordProgressionGenerator(ChordProgressionRule.getRule(), scoreKey);
+    chordProgressionGenerator.buildProgression();
+    console.log(chordProgressionGenerator.progression);
+    chordProgressionGenerator.buildChordMap();
+    console.log(chordProgressionGenerator.chordMap);
+    const musicGenerator = new MusicGenerator(chordProgressionGenerator.progression, chordProgressionGenerator.chordMap);
     const generatedScore = musicGenerator.generateScore(measures, timeSignature);
     setScore(generatedScore);
     setScoreIndex((prevIndex) => prevIndex + 1); // Increment key to force re-render
   };
-  useEffect(() => {
-    console.log(timeSignature);
-  }, [timeSignature]);
   
   return (
     <div className="App">

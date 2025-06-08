@@ -95,20 +95,21 @@ class MusicGenerator {
     return pool[Math.floor(Math.random() * pool.length)];
   }
 
-  getBassPitch(measureIdx) {
-    // Get the chord for this measure
-    const chordName = this.progression[measureIdx % this.progression.length];
-    const chordNotes = this.chordMap[chordName];
-    const note = chordNotes[Math.floor(Math.random() * chordNotes.length)];
-    return note + ",";
-  }
   getTreblePitch(measureIdx) {
     const chordName = this.progression[measureIdx % this.progression.length];
     const chordNotes = this.chordMap[chordName];
     const note = chordNotes[Math.floor(Math.random() * chordNotes.length)];
     return note;
   }
-
+  getBassPitch(measureIdx) {
+    // Get the chord for this measure
+    const chordName = this.progression[measureIdx % this.progression.length];
+    const chordNotes = this.chordMap[chordName];
+    const note = chordNotes[Math.floor(Math.random() * chordNotes.length)];
+    console.log(measureIdx, chordName, note);
+    return note + ",";
+  }
+  
   generateScore(numMeasures, timeSignature) {
     const trebleMeasures = [];
     const bassMeasures = [];
@@ -120,6 +121,7 @@ class MusicGenerator {
       const bassRhythm = this.generateMeasure(timeSignature, "bass").rhythm;
       const bassPitches = this.assignPitches(bassRhythm, "bass", i);
       bassMeasures.push({ rhythm: bassRhythm, pitches: bassPitches });
+      // console.log(this.chordMap);
     }
     return { treble: trebleMeasures, bass: bassMeasures };
   }
