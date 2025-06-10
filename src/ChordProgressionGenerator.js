@@ -6,6 +6,9 @@ class ChordProgressionGenerator {
         this.rule = chordProgressionRule;
         this.key = key;
     }
+    mapKeyLetter(key) {
+        return key.charAt(0);
+    }
     buildProgression(){
         this.progression.push("I");
         for (let i = 0; i < this.progressionLength - 1; i++){
@@ -21,8 +24,8 @@ class ChordProgressionGenerator {
         return this.progression;
     }
     buildChordMap() {
-        const key = this.key; // e.g., "C" for C major
-        const scale = this.getScale(key); // Get the scale for the key
+        const key = this.mapKeyLetter(this.key);
+        const scale = this.getScale(key);
 
         this.chordMap = {};
         this.progression.forEach(chord => {
@@ -51,11 +54,11 @@ class ChordProgressionGenerator {
         });
         return this.chordMap;
     }
-    getScale() {
+    getScale(key) {
         // Define the major scale intervals
         const intervals = [0, 1, 2, 3, 4, 5, 6];
         const notes = ["C", "D", "E", "F", "G", "A", "B"];
-        const keyIndex = notes.indexOf(this.key);
+        const keyIndex = notes.indexOf(key);
         return intervals.map(interval => notes[(keyIndex + interval) % 7]);
     }
     buildTriad(root) {

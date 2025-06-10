@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import abcjs from "abcjs";
+import AbcNotationParser from "./AbcNotationParser";
 
 const ScoreRenderer = ({ scoreData, timeSignature, scoreKey }) => {
   const containerRef = useRef(null);
@@ -7,72 +8,13 @@ const ScoreRenderer = ({ scoreData, timeSignature, scoreKey }) => {
   const abcStringRef = useRef("");
   const playheadRef = useRef(null);
   const synthInstanceRef = useRef(null);
+  const abcParser = useRef(new AbcNotationParser());
 
   useEffect(() => {
     if (!scoreData) return;
 
-    // Convert score data to ABC notation
-    const generateAbcNotation = () => {
-      let abcString = `X:1\nM:${timeSignature}\nL:1/8\nK:${scoreKey}\n`;
-      let measures = 4;
-      // Add treble clef notes
-      if (scoreData.treble.length > 0) {
-        abcString += "V:1 treble\n";
-        let i = 0;
-        scoreData.treble.forEach((measure, measureIdx) => {
-          i++;
-          measure.rhythm.forEach((note, idx) => {
-            const pitch = measure.pitches[idx];
-            const duration = note.type;
-            if (idx === measure.rhythm.length - 1) {
-              if (measureIdx === scoreData.treble.length - 1) {
-                abcString += `${pitch}${duration} |]`;
-              } else {
-                if (i % measures === 0) {
-                  abcString += `${pitch}${duration} |\n`;
-                } else {
-                  abcString += `${pitch}${duration} |`;
-                }
-              }
-            } else {
-              abcString += `${pitch}${duration} `;
-            }
-          });
-        });
-        abcString += "|\n";
-      }
-
-      // Add bass clef notes
-      if (scoreData.bass.length > 0) {
-        abcString += "V:2 bass\n";
-        let i = 0;
-        scoreData.bass.forEach((measure, measureIdx) => {
-          i++;
-          measure.rhythm.forEach((note, idx) => {
-            const pitch = measure.pitches[idx];
-            const duration = note.type;
-            if (idx === measure.rhythm.length - 1) {
-              if (measureIdx === scoreData.treble.length - 1) {
-                abcString += `${pitch}${duration} |]`;
-              } else {
-                if (i % measures === 0) {
-                  abcString += `${pitch}${duration} |\n`;
-                } else {
-                  abcString += `${pitch}${duration} |`;
-                }
-              }
-            } else {
-              abcString += `${pitch}${duration} `;
-            }
-          });
-        });
-        abcString += "|\n";
-      }
-
-      return abcString;
-    };
-
-    const abcString = generateAbcNotation();
+    // Generate ABC notation using the new class
+    const abcString = abcParser.current.generateFullScore(scoreData, timeSignature, scoreKey);
     abcStringRef.current = abcString;
 
     // Render the ABC notation and get the visualObj

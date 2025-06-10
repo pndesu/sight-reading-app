@@ -51,12 +51,17 @@ function App() {
             onChange={(e) => setScoreKey(e.target.value)}
           >
             <option value="C">C</option>
-            <option value="D">D</option>
-            <option value="E">E</option>
-            <option value="F">F</option>
             <option value="G">G</option>
+            <option value="D">D</option>
             <option value="A">A</option>
+            <option value="E">E</option>
             <option value="B">B</option>
+            <option value="F#">F#</option>
+            <option value="F">F</option>
+            <option value="Bb">Bb</option>
+            <option value="Eb">Eb</option>
+            <option value="Ab">Ab</option>
+            <option value="Db">Db</option>
           </select>
           </label>
         <button onClick={generateScore}>Generate Score</button>
