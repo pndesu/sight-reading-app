@@ -44,17 +44,13 @@ class MusicGenerator {
     const chordNotes = this.chordMap[chordName];
     const firstNote = chordNotes[0];
     if (clef === "treble") {
-      const pitches = rhythm.map((_, index) => {
-        if (index === 0 || index === rhythm.length - 1) {
-          return firstNote; // First and last note must be the first note of the chord
-        }
+      return rhythm.map((_, index) => {
         return this.getTreblePitch(measureIdx);
       });
-      return pitches;
     } else {
         return rhythm.map((_, index) => {
             if (index === 0) {
-                return firstNote + ","; // First bass note is the first note of the chord
+                return this.toAbcPitch(firstNote, this.getRandomOctaveForClef(firstNote, "bass")); // First bass note is the first note of the chord
             }
             return this.getBassPitch(measureIdx);
         });
@@ -125,6 +121,7 @@ class MusicGenerator {
     const note = chordNotes[Math.floor(Math.random() * chordNotes.length)];
     const octave = this.getRandomOctaveForClef(note, "treble");
     const harmonyCandidates = this.getHarmonyCandidate(note, octave, "treble", chordNotes);
+    console.log(harmonyCandidates);
     return this.addHarmony(note, octave, "treble", harmonyCandidates);
   }
   getBassPitch(measureIdx) {
