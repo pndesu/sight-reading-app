@@ -20,21 +20,52 @@ class MusicGenerator {
     return beats * (4 / beatType);
   }
 
-  generateMeasure(timeSignature, clef) {
-    const totalDuration = this.getTotalDuration(timeSignature);
-    let remaining = totalDuration;
-    let rhythm = [];
-
-    while (remaining > 0) {
-      const availableNotes = this.noteDurations.filter(
-        (n) => n.value <= remaining
-      );
-      const note =
-        availableNotes[Math.floor(Math.random() * availableNotes.length)];
-      rhythm.push(note);
-      remaining -= note.value;
+  getAllRhythmSubdivisions(target = 1, current = [], results = []) {
+    // Recursively find all combinations of noteDurations that sum to target
+    for (const n of this.noteDurations) {
+      const sum = current.reduce((acc, note) => acc + note.value, 0) + n.value;
+      if (sum < target) {
+        this.getAllRhythmSubdivisions(target, [...current, n], results);
+      } else if (sum === target) {
+        results.push([...current, n]);
+      }
     }
+    return results;
+  }
 
+  assignRhythm(timeSignature, clef) {
+    const [beats, beatType] = timeSignature.split("/").map(Number);
+    const totalDuration = beats * (4 / beatType);
+    if (clef === "bass") {
+      // For bass, each group sums to 1 (one beat)
+      const rhythm = [];
+      for (let i = 0; i < beats; i++) {
+        // Get all possible subdivisions for one beat
+        const subdivisions = this.getAllRhythmSubdivisions(1);
+        // Pick one randomly
+        const group = subdivisions[Math.floor(Math.random() * subdivisions.length)];
+        rhythm.push(...group);
+      }
+      return rhythm;
+    } else {
+      // Treble: original random rhythm logic
+      let remaining = totalDuration;
+      let rhythm = [];
+      while (remaining > 0) {
+        const availableNotes = this.noteDurations.filter(
+          (n) => n.value <= remaining
+        );
+        const note =
+          availableNotes[Math.floor(Math.random() * availableNotes.length)];
+        rhythm.push(note);
+        remaining -= note.value;
+      }
+      return rhythm;
+    }
+  }
+
+  generateMeasure(timeSignature, clef) {
+    const rhythm = this.assignRhythm(timeSignature, clef);
     const pitches = this.assignPitches(rhythm, clef);
     return { rhythm, pitches };
   }

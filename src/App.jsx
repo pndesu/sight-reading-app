@@ -37,7 +37,6 @@ function App() {
             <option value="2/4">2/4</option>
             <option value="3/4">3/4</option>
             <option value="4/4">4/4</option>
-            <option value="6/8">6/8</option>
           </select>
         </label>
         <label>
