@@ -3,6 +3,8 @@ import MusicGenerator from "./MusicGenerator";
 import ScoreRenderer from "./ScoreRenderer.jsx";
 import { ChordProgressionRule1 } from "./ChordProgressionRule";
 import ChordProgressionGenerator from "./ChordProgressionGenerator";
+import { RhythmStrategyLevel1 } from "./RhythmStrategy.js";
+import PitchStrategy from "./PitchStrategy.js";
 import "./App.css";
 import "abcjs/abcjs-audio.css";
 function App() {
@@ -15,11 +17,14 @@ function App() {
   const generateScore = () => {
     const ChordProgressionRule = new ChordProgressionRule1();
     const chordProgressionGenerator = new ChordProgressionGenerator(ChordProgressionRule.getRule(), scoreKey);
-    chordProgressionGenerator.buildProgression();
-    chordProgressionGenerator.buildChordMap();
-    console.log(chordProgressionGenerator.progression, chordProgressionGenerator.chordMap);
-    const musicGenerator = new MusicGenerator(chordProgressionGenerator.progression, chordProgressionGenerator.chordMap);
-    const generatedScore = musicGenerator.generateScore(measures, timeSignature);
+    const progression = chordProgressionGenerator.buildProgression();
+    const chordMap = chordProgressionGenerator.buildChordMap();
+    console.log(progression, chordMap);
+    const noteDurations = new RhythmStrategyLevel1();
+    const pitchStrategy = new PitchStrategy(progression, chordMap);
+    console.log(pitchStrategy.chordMap);
+    const musicGenerator = new MusicGenerator(timeSignature, progression, chordMap, noteDurations, pitchStrategy, measures);
+    const generatedScore = musicGenerator.generateScore();
     setScore(generatedScore);
     setScoreIndex((prevIndex) => prevIndex + 1); // Increment key to force re-render
   };

@@ -39,6 +39,7 @@ class AbcNotationParser {
                 i++;
                 let currentGroup = [];
                 let currentPitches = [];
+                console.log(measure);
                 
                 measure.rhythm.forEach((note, idx) => {
                     currentGroup.push(note);
